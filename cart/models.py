@@ -52,3 +52,25 @@ class OutboxEvent(models.Model):
 
 
 # --- Add your domain models below -------------------------------------------
+
+
+class CartItem(models.Model):
+    """A line in a user's cart. Price/name are snapshotted from catalog at
+    add-time so the cart is stable even if the product later changes."""
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user_id = models.CharField(max_length=64, db_index=True)
+    product_sku = models.CharField(max_length=64)
+    name = models.CharField(max_length=255)
+    unit_price = models.DecimalField(max_digits=12, decimal_places=2)
+    quantity = models.PositiveIntegerField(default=1)
+    added_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["added_at"]
+        constraints = [
+            models.UniqueConstraint(fields=["user_id", "product_sku"], name="uniq_user_sku")
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.user_id}: {self.product_sku} x{self.quantity}"

@@ -34,6 +34,7 @@ config:
   LOG_LEVEL: "INFO"
   KAFKA_BOOTSTRAP_SERVERS: "ecommerce-kafka-bootstrap.kafka:9092"
   SCHEMA_REGISTRY_URL: "http://apicurio-registry.kafka:8080/apis/registry/v2"
+  CATALOG_URL: "http://catalog-service"   # sync stock-check over ClusterIP DNS
 
 # Existing Secret providing DJANGO_SECRET_KEY, POSTGRES_PASSWORD, etc.
 secretName: ""
